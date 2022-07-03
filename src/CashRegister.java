@@ -43,26 +43,30 @@ public class CashRegister {
         // Setting up scanner
         try {
             fileScanner = new Scanner(fileRef);
+
+            // Creating item array
+            itemArray = new Items[numberOfInventoryItems];
+
+            // Scan in imput and split by new line chars
+            fileLine = fileScanner.nextLine();
+            String[] splitFileImport = fileLine.split(Pattern.quote(","));
+
+            // Input code, name, price into Items objects in the array, advance index by 1, split index by 4
+            for (int index = 0, splitIndex = 0; index < 9; index+=1, splitIndex+=4) {
+                // Select by index in array and imported from split input array
+                itemArray[index].setCode(Integer.parseInt(splitFileImport[splitIndex]));
+                itemArray[index].setName(splitFileImport[splitIndex]+1);
+                itemArray[index].setPrice(Double.parseDouble(splitFileImport[splitIndex]+2));
+            }
         }
         catch (IOException ioException)
         {
             // FILE NOT FOUND
         }
-
-        // Creating item array
-        itemArray = new Items[numberOfInventoryItems];
-
-        // Scan in imput and split by new line chars
-        fileLine = fileScanner.nextLine();
-        String[] splitFileImport = fileLine.split(Pattern.quote(","));
-
-        // Input code, name, price into Items objects in the array, advance index by 1, split index by 4
-        for (int index = 0, splitIndex = 0; index < 9; index+=1, splitIndex+=4) {
-            // Select by index in array and imported from split input array
-            itemArray[index].setCode(Integer.parseInt(splitFileImport[splitIndex]));
-            itemArray[index].setName(splitFileImport[splitIndex]+1);
-            itemArray[index].setPrice(Double.parseDouble(splitFileImport[splitIndex]+2));
+        catch (Exception e){
+            // Will need to change, caused by "Cannot invoke "Items.setCode(int)" because "CashRegister.itemArray[index]" is null"
         }
+
     }
 
 
