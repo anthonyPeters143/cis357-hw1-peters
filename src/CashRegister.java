@@ -16,7 +16,7 @@ public class CashRegister {
 
     // Global vars
     private static int numberOfInventoryItems = 10;
-    private static Items[] itemArray;
+    private static Items[] itemArray = new Items[10];
 
     // Constants
     private static final String INVENTORY_FILE = "INVENTORY_FILE",
@@ -29,6 +29,10 @@ public class CashRegister {
         // Declare and Initialization Item object array
         initialize();
 
+        // Sale
+
+        // Finish
+
     }
 
     /**
@@ -39,32 +43,35 @@ public class CashRegister {
         String fileLine;
         Scanner fileScanner = null;
         File fileRef = new File(INVENTORY_FILE);
+        itemArray = new Items[numberOfInventoryItems];
 
         // Setting up scanner
         try {
             fileScanner = new Scanner(fileRef);
-
-            // Creating item array
-            itemArray = new Items[numberOfInventoryItems];
 
             // Scan in imput and split by new line chars
             fileLine = fileScanner.nextLine();
             String[] splitFileImport = fileLine.split(Pattern.quote(","));
 
             // Input code, name, price into Items objects in the array, advance index by 1, split index by 4
-            for (int index = 0, splitIndex = 0; index < 9; index+=1, splitIndex+=4) {
-                // Select by index in array and imported from split input array
-                itemArray[index].setCode(Integer.parseInt(splitFileImport[splitIndex]));
-                itemArray[index].setName(splitFileImport[splitIndex]+1);
-                itemArray[index].setPrice(Double.parseDouble(splitFileImport[splitIndex]+2));
+            for (int index = 0, splitIndex = 0; index < 10; index+=1, splitIndex+=3) {
+                // Create by index in array and imported from split input array
+                itemArray[index] = new Items(Integer.parseInt(splitFileImport[splitIndex]),
+                        String.valueOf(splitFileImport[splitIndex+1]),
+                        Double.parseDouble(splitFileImport[splitIndex+2]));
             }
         }
+
+        // WILL NEED TO UPDATE CATCHES
         catch (IOException ioException)
         {
             // FILE NOT FOUND
+            System.out.print(ioException);
         }
         catch (Exception e){
             // Will need to change, caused by "Cannot invoke "Items.setCode(int)" because "CashRegister.itemArray[index]" is null"
+
+            System.out.print(e);
         }
 
     }
