@@ -20,7 +20,14 @@ public class CashRegister {
 
     // Constants
     private static final String INVENTORY_FILE = "INVENTORY_FILE",
-        WELCOME_MESSAGE = "Welcome to Peters cash register system!\n\nBeginning a new sale? (Y/N)";
+        WELCOME_MESSAGE = "\nWelcome to Peters cash register system!\n\n",
+        BEGINNING_SALE_MESSAGE  = "Beginning a new sale? (Y/N) ",
+        INPUT_INCORRECT_MESSAGE = "Input incorrect, should be : ",     // add char to end of message
+        BREAK_LINE              = "--------------------",
+        ENTER_CODE_MESSAGE      = "Enter product code: ",
+        ITEM_NAME_MESSAGE       = "         item name: ",
+        ENTER_QUANTITY_MESSAGE  = "Enter quantity:     ",
+        ITEM_TOTAL_MESSAGE      = "        item total: ";
 
     /**
      * Main method
@@ -30,6 +37,7 @@ public class CashRegister {
         initialize();
 
         // Sale
+        transaction();
 
         // Finish
 
@@ -66,42 +74,148 @@ public class CashRegister {
         catch (IOException ioException)
         {
             // FILE NOT FOUND
-            System.out.print(ioException);
+//            System.out.print(ioException);
+            ioException.printStackTrace();
         }
         catch (Exception e){
             // Will need to change, caused by "Cannot invoke "Items.setCode(int)" because "CashRegister.itemArray[index]" is null"
 
-            System.out.print(e);
+//            System.out.print(e);
+            e.printStackTrace();
         }
 
     }
 
+    /**
+     * Sale method
+     */
+    private static void transaction(){
+        // Welcome message output
+        System.out.print(WELCOME_MESSAGE);
+
+        // Start Sale Interaction
+        int beginningSaleValue = welcome();
 
 
-        //!!!start/initial
+    }
 
-        //    {
-        //        // Declare and Initialization
-        //        QuakeData[] quakeArray = new QuakeData[ARRAY_SIZE];
-        //        boolean endSearchingFlag = false;
-        //
-        //        // Program Identification
-        //        identification();
-        //
-        //        // Processing quakes into array
-        //        fileProcessing(quakeArray);
-        //
-        //        // Looping till user wants to end
-        //        do {
-        //
-        //            // Initialize as false need to true
-        //            endSearchingFlag = searchingData(quakeArray);
-        //
-        //        } while (endSearchingFlag);
-        //
-        //        // Terminate Program
-        //        System.exit(0);
-        //    }
+    /**
+     * Welcome method
+     *
+     * returns 2 if input is Y,y
+     * returns 1 if input is N,n
+     * else returns 0
+     */
+    private static int welcome(){
+        // Declare and Initialization
+        int returnInt = 0;
+        boolean codeInputFlag = false;
+
+
+        // User input try/catch for Y,N,y,n
+        try
+        {
+            // Output Beginning Message
+            System.out.print(BEGINNING_SALE_MESSAGE);
+
+            // setup scanner for input
+            Scanner inputScanner = new Scanner(System.in);
+//            inputScanner.close();     For when you ready to close it
+
+            // loop till input is correct
+            do {
+                // user input
+                String userInput = inputScanner.next();
+
+                //Test if input is 1 char long and is Yy
+                if (userInput.matches("[Yy]{1}")) {
+
+                    // Input Correct, user = yes
+                    returnInt = 2;
+
+                    // Print text break
+                    System.out.print(BREAK_LINE);
+
+                    // Start sale   !!!!!!!!!!!!!!!!
+
+                    // Loop till input is correct
+                    do {
+                        // Prompt for code input
+                        System.out.print("\n"+ENTER_CODE_MESSAGE);
+                        // User input
+                        userInput = inputScanner.next();
+                        // Check input
+                        if (userInput.matches("\\b([1-9]|10)\\b")){
+                            // Code Input Correct
+                            codeInputFlag = true;
+
+                            // Add Item to Sale
+                            switch (userInput) {
+                                case "1":
+                                    //Add Sale Item
+                                    break;
+                                case "2":
+                                    //Add Sale Item
+                                    break;
+                                case "3":
+                                    //Add Sale Item
+                                    break;
+                                case "4":
+                                    //Add Sale Item
+                                    break;
+                                case "5":
+                                    //Add Sale Item
+                                    break;
+                                case "6":
+                                    //Add Sale Item
+                                    break;
+                                case "7":
+                                    //Add Sale Item
+                                    break;
+                                case "8":
+                                    //Add Sale Item
+                                    break;
+                                case "9":
+                                    //Add Sale Item
+                                    break;
+                                case "10":
+                                    //Add Sale Item
+                                    break;
+                            }
+                        }
+                        else {
+                            // Code Input Incorrect
+                            // Print incorrect message
+                            System.out.print(INPUT_INCORRECT_MESSAGE + "[1-10]\t");
+                        }
+                    } while (codeInputFlag == false);
+
+                }
+                //Test if input is 1 char long and is Nn
+                else if (userInput.matches("[Nn]{1}")){
+
+                    // Input Correct, user = no
+                    returnInt = 1;
+
+                    // EOD earnings
+                }
+                else {
+                    // Input incorrect
+                    // Print incorrect message
+                    System.out.print(INPUT_INCORRECT_MESSAGE + "(Y/N)\t");
+                }
+            } while (returnInt == 0);
+
+            return returnInt;
+
+            // add extra exception for input problems
+        } catch (Exception e){
+            // Input incorrect
+            e.printStackTrace();
+
+            return 0;
+        }
+    }
 
             //!!!importFromFile
 
