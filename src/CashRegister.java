@@ -7,7 +7,7 @@
 // Program description:
 
 import java.io.*;
-import java.util.Arrays;
+
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class CashRegister {
 
     // Global vars
-    private static int numberOfInventoryItems = 10;
+    private final static int numberOfInventoryItems = 10;
     private static Items[] itemArray = new Items[10];
 
     // Constants
@@ -87,7 +87,7 @@ public class CashRegister {
     }
 
     /**
-     * Sale method
+     * Transaction method
      */
     private static void transaction(){
         // Welcome message output
@@ -110,7 +110,6 @@ public class CashRegister {
         // Declare and Initialization
         int returnInt = 0;
         boolean codeInputFlag = false;
-
 
         // User input try/catch for Y,N,y,n
         try
@@ -136,18 +135,31 @@ public class CashRegister {
                     // Print text break
                     System.out.print(BREAK_LINE);
 
-                    // Start sale   !!!!!!!!!!!!!!!!
+                    // Start sale object    !!!!!!!!!!!!!!!!
 
                     // Loop till input is correct
                     do {
                         // Prompt for code input
                         System.out.print("\n"+ENTER_CODE_MESSAGE);
+
                         // User input
                         userInput = inputScanner.next();
-                        // Check input
+
+                        // Check if input is [1-10]
                         if (userInput.matches("\\b([1-9]|10)\\b")){
                             // Code Input Correct
                             codeInputFlag = true;
+
+                            // Output Item name message + item name from itemArray
+                            System.out.print("\n"+ITEM_NAME_MESSAGE + itemArray[Integer.parseInt(userInput)].getName());
+
+                            // Prompt for item quantity
+                            System.out.print("\n"+ENTER_QUANTITY_MESSAGE);
+
+                            // User input
+                            userInput = inputScanner.next();
+
+                            // get Quantity
 
                             // Add Item to Sale
                             switch (userInput) {
@@ -182,13 +194,15 @@ public class CashRegister {
                                     //Add Sale Item
                                     break;
                             }
+
+
                         }
                         else {
                             // Code Input Incorrect
                             // Print incorrect message
                             System.out.print(INPUT_INCORRECT_MESSAGE + "[1-10]\t");
                         }
-                    } while (codeInputFlag == false);
+                    } while (!codeInputFlag);
 
                 }
                 //Test if input is 1 char long and is Nn
@@ -237,4 +251,29 @@ public class CashRegister {
                   //else retry code till valid
             //N
                 //print daySaleTotal
+
+//    /**
+//     * findItemName Method
+//     */
+//    static String findItemName(int input){
+//
+//        // Find
+//        for (int index = 0; index < 10; index++){
+//
+//        }
+//
+//        itemArray[input].getName()
+//
+//        // Input code, name, price into Items objects in the array, advance index by 1, split index by 4
+//        for (int index = 0, splitIndex = 0; index < 10; index+=1, splitIndex+=3) {
+//            // Create by index in array and imported from split input array
+//            itemArray[index] = new Items(Integer.parseInt(splitFileImport[splitIndex]),
+//                    String.valueOf(splitFileImport[splitIndex+1]),
+//                    Double.parseDouble(splitFileImport[splitIndex+2]));
+//        }
+//
+//
+//    }
+
 }
+

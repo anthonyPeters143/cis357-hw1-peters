@@ -1,4 +1,13 @@
 public class Sale {
+    /** Class to store sale total, itemQuantity, */
+
+        /**
+        * Non-Aug. Constructor
+        */
+        Sale(){
+
+        }
+
 }
 
 
