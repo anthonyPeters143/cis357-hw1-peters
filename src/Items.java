@@ -2,7 +2,7 @@
 // Course: CIS357
 // Due date: 4-4-22
 // Name: Anthony Peters
-// GitHub: anthonyPeters143 / cis357-hw1-peters
+// GitHub: https://github.com/anthonyPeters143/cis357-hw1-peters
 // Instructor: Il-Hyung Cho
 // Program description: Items class stores item's code, name, and price and allows CashRegister to access and interact
 // with item fields.

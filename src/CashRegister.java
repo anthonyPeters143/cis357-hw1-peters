@@ -2,7 +2,7 @@
 // Course: CIS357
 // Due date: 4-4-22
 // Name: Anthony Peters
-// GitHub: anthonyPeters143 / cis357-hw1-peters
+// GitHub: https://github.com/anthonyPeters143/cis357-hw1-peters
 // Instructor: Il-Hyung Cho
 // Program description: CashRegister uses Sale and Item objects to track sales and items and interact with a cashier
 // to allow them to input item code and quantity. Will prompt user for beginning a sale, inputting code, and inputting

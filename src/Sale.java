@@ -2,7 +2,7 @@
 // Course: CIS357
 // Due date: 4-4-22
 // Name: Anthony Peters
-// GitHub: anthonyPeters143 / cis357-hw1-peters
+// GitHub: https://github.com/anthonyPeters143/cis357-hw1-peters
 // Instructor: Il-Hyung Cho
 // Program description: The Sale class tracks item totals, quantities, as well as sale total, total with tax included,
 // and End of day total for CashRegister class. Sale class can also create a receipt and reset totals while leaving the
