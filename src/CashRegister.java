@@ -1,30 +1,43 @@
 // Homework 1: Sales Register Program
 // Course: CIS357
-// Due date: xxx
+// Due date: 4-4-22
 // Name: Anthony Peters
-// GitHub: xxx
+// GitHub: anthonyPeters143 / cis357-hw1-peters
 // Instructor: Il-Hyung Cho
-// Program description:
+// Program description: CashRegister uses Sale and Item objects to track sales and items and interact with a cashier
+// to allow them to input item code and quantity. Will prompt user for beginning a sale, inputting code, and inputting
+// quantity.
 
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-/** Javadoc comments for CashRegister.java */
+/**
+ * @author Anthony Peters
+ *
+ * The CashRegister contatins initialize and transaction methods, and uses Sale and Item objects
+ */
 public class CashRegister {
 
-    // Global vars
+    /**
+     * Number of items types in inventory
+     */
     private final static int numberOfInventoryItems = 10;
-    private static Items[] itemArray = new Items[10];
+    /**
+     * Inventory for items
+     */
+    private static Items[] itemArray = new Items[numberOfInventoryItems];
+    /**
+     * Sale object
+     */
     private static Sale sale;
     private static final DecimalFormat currencyFormat = new DecimalFormat("#,###.00");
 
-    // Constants
+    // String constants
     private static final String INVENTORY_FILE = "INVENTORY_FILE",
         WELCOME_MESSAGE                     = "\nWelcome to Peter's cash register system!\n",
         BEGINNING_SALE_MESSAGE              = "\nBeginning a new sale? (Y/N) ",
-//        INPUT_INCORRECT_MESSAGE             = "Input incorrect, should be : ",     // add char to end of message
         SALE_INPUT_INCORRECT_MESSAGE        = "!!! Invalid input\nShould be (Y/N)\n",
         CODE_INPUT_INCORRECT_MESSAGE        = "!!! Invalid product code\nShould be [1-10], -1 = quit",
         QUANTITY_INPUT_INCORRECT_MESSAGE    = "!!! Invalid quantity\nShould be [1-100]",
@@ -43,9 +56,9 @@ public class CashRegister {
         THANK_YOU                           = "Thanks for using POST system. Goodbye.";
 
     /**
-     * Main method
+     * Main method drives class and exits the system when finished
      */
-    public static void main(String[] args) {     //DONT FORGET TO ADD EXCEPTION
+    public static void main(String[] args) {
         // Declare and Initialization Item object array
         initialize();
 
@@ -57,12 +70,14 @@ public class CashRegister {
     }
 
     /**
-     * Initialize method
+     * Method initializes Item array and Sale item
+     *
+     * @throws  IOException,if file is not found or file input is invalid
      */
     private static void initialize() {
         // Declare and Initialization
         String fileLine;
-        Scanner fileScanner = null;
+        Scanner fileScanner;
         File fileRef = new File(INVENTORY_FILE);
         itemArray = new Items[numberOfInventoryItems];
         sale = new Sale();
@@ -86,59 +101,58 @@ public class CashRegister {
             // Close scanner
             fileScanner.close();
         }
-
         // WILL NEED TO UPDATE CATCHES
         catch (IOException ioException)
         {
             // FILE NOT FOUND
             ioException.printStackTrace();
         }
-        catch (Exception e){
-            // Will need to change, caused by "Cannot invoke "Items.setCode(int)" because "CashRegister.itemArray[index]" is null"
-            e.printStackTrace();
-        }
-
     }
 
     /**
-     * Transaction method
-     *
-     * drives the check-out process
+     * Transaction method drives the check-out process loop and checks the output transaction number from checkOut
+     * method then returns to main when checkOut returns not 1
      */
     private static void transaction(){
+        int transactionNumber;
+
         // Welcome message output
         System.out.print(WELCOME_MESSAGE);
 
-        // Start Sale Interaction
-        checkOut();
-
+        // Loop till checkOut() returns != 1
+        do {
+            // Start Sale Interaction
+            transactionNumber = checkOut();
+        } while (transactionNumber != 1);
     }
 
     /**
-     * checkOut method
+     * checkOut method drives interaction between user input and Sale object by prompting for new sales, item codes
+     * and quantities. When receiving 'Y' or 'y' inputs for new sale input, method will prompt for an item code [1-10]
+     * then quantity amount [1-100]. If sale input is 'N' or 'n', method will output an exit message and End of Day
+     * total. If item code entered is "-1", then method will output a receipt of totals, names, and quantities of items
+     * sold in that sale then prompt and check input for tender and output change amount. Then reset to prompting for
+     * new sales.
      *
-     * returns 2 if input is Y,y
-     * returns 1 if input is N,n
-     * else returns 0
+     * @return      2 if input for new sale is 'Y'/'y', 1 if input is 'N'/'n', else 0
      */
     private static int checkOut(){
         // Declare and Initialization
         int returnInt = 0, itemQuantity;
         String itemCode;
-        double itemPrice = 0, tenderAmount = 0;
-        boolean codeInputFlag = false, quantityInputFlag = false, dayFinshedFlag = false,
-                quitSaleFlag, tenderCorrectFlag = false;
+        double itemPrice = 0, tenderAmount;
+        boolean codeInputFlag = false, quantityInputFlag = false, tenderCorrectFlag = false,quitSaleFlag;
 
         // User input try/catch for Y,N,y,n
         try
         {
             // Setup scanner for input
             Scanner inputScanner = new Scanner(System.in);
-//            inputScanner.close();     For when you ready to close it
 
             // loop till input is correct
             do {
-                quitSaleFlag =false;
+                // Reset flag
+                quitSaleFlag = false;
 
                 // Output Beginning Message
                 System.out.print(BEGINNING_SALE_MESSAGE);
@@ -158,6 +172,9 @@ public class CashRegister {
                     // Loop till input is valid
                     do {
                         try {
+                            // Reset code flag
+                            codeInputFlag = false;
+
                             // Prompt for code input
                             System.out.print("\n"+ENTER_CODE_MESSAGE);
 
@@ -171,107 +188,112 @@ public class CashRegister {
                                 codeInputFlag = true;
 
                                 // Output Item name message + item name from itemArray
-                                System.out.print(ITEM_NAME_MESSAGE + itemArray[Integer.parseInt(userInput)-1].getitemName());
+                                System.out.print(ITEM_NAME_MESSAGE + itemArray[Integer.parseInt(itemCode)-1].getitemName());
 
                                 // Loop till input is valid
                                 do {
                                     try {
-                                    // Prompt for item quantity
-                                    System.out.print("\n"+ENTER_QUANTITY_MESSAGE);
+                                        // Reset flag
+                                        quantityInputFlag = false;
 
-                                    // User input
-                                    userInput = inputScanner.next();
+                                        // Prompt for item quantity
+                                        System.out.print("\n"+ENTER_QUANTITY_MESSAGE);
 
-                                    itemQuantity = Integer.parseInt(userInput);
+                                        // User input
+                                        userInput = inputScanner.next();
 
-                                    // Check if quantity is [1-100]
-                                    if (itemQuantity > 0 && itemQuantity <= 100) {
-                                        // Quantity input valid
-                                        quantityInputFlag = true;
+                                        itemQuantity = Integer.parseInt(userInput);
 
-                                        // Add Item price to Sale object
-                                        switch (itemCode) {
-                                            case "1":
-                                                itemPrice = itemArray[0].getPrice() * itemQuantity;
-                                                sale.addItem1Total(itemPrice);
-                                                sale.addItem1Quantity(itemQuantity);
-                                                break;
-                                            case "2":
-                                                itemPrice = itemArray[1].getPrice() * itemQuantity;
-                                                sale.addItem2Total(itemPrice);
-                                                sale.addItem2Quantity(itemQuantity);
-                                                break;
-                                            case "3":
-                                                itemPrice = itemArray[2].getPrice() * itemQuantity;
-                                                sale.addItem3Total(itemPrice);
-                                                sale.addItem3Quantity(itemQuantity);
-                                                break;
-                                            case "4":
-                                                itemPrice = itemArray[3].getPrice() * itemQuantity;
-                                                sale.addItem4Total(itemPrice);
-                                                sale.addItem4Quantity(itemQuantity);
-                                                break;
-                                            case "5":
-                                                itemPrice = itemArray[4].getPrice() * itemQuantity;
-                                                sale.addItem5Total(itemPrice);
-                                                sale.addItem5Quantity(itemQuantity);
-                                                break;
-                                            case "6":
-                                                itemPrice = itemArray[5].getPrice() * itemQuantity;
-                                                sale.addItem6Total(itemPrice);
-                                                sale.addItem6Quantity(itemQuantity);
-                                                break;
-                                            case "7":
-                                                itemPrice = itemArray[6].getPrice() * itemQuantity;
-                                                sale.addItem7Total(itemPrice);
-                                                sale.addItem7Quantity(itemQuantity);
-                                                break;
-                                            case "8":
-                                                itemPrice = itemArray[7].getPrice() * itemQuantity;
-                                                sale.addItem8Total(itemPrice);
-                                                sale.addItem8Quantity(itemQuantity);
-                                                break;
-                                            case "9":
-                                                itemPrice = itemArray[8].getPrice() * itemQuantity;
-                                                sale.addItem9Total(itemPrice);
-                                                sale.addItem9Quantity(itemQuantity);
-                                                break;
-                                            case "10":
-                                                itemPrice = itemArray[9].getPrice() * itemQuantity;
-                                                sale.addItem10Total(itemPrice);
-                                                sale.addItem10Quantity(itemQuantity);
-                                                break;
+                                        // Check if quantity is [1-100]
+                                        if (itemQuantity > 0 && itemQuantity <= 100) {
+                                            // Quantity input valid
+                                            quantityInputFlag = true;
+
+                                            // Add Item price to Sale object
+                                            switch (itemCode) {
+                                                case "1":
+                                                    itemPrice = itemArray[0].getPrice() * itemQuantity;
+                                                    sale.addItem1Total(itemPrice);
+                                                    sale.addItem1Quantity(itemQuantity);
+                                                    break;
+                                                case "2":
+                                                    itemPrice = itemArray[1].getPrice() * itemQuantity;
+                                                    sale.addItem2Total(itemPrice);
+                                                    sale.addItem2Quantity(itemQuantity);
+                                                    break;
+                                                case "3":
+                                                    itemPrice = itemArray[2].getPrice() * itemQuantity;
+                                                    sale.addItem3Total(itemPrice);
+                                                    sale.addItem3Quantity(itemQuantity);
+                                                    break;
+                                                case "4":
+                                                    itemPrice = itemArray[3].getPrice() * itemQuantity;
+                                                    sale.addItem4Total(itemPrice);
+                                                    sale.addItem4Quantity(itemQuantity);
+                                                    break;
+                                                case "5":
+                                                    itemPrice = itemArray[4].getPrice() * itemQuantity;
+                                                    sale.addItem5Total(itemPrice);
+                                                    sale.addItem5Quantity(itemQuantity);
+                                                    break;
+                                                case "6":
+                                                    itemPrice = itemArray[5].getPrice() * itemQuantity;
+                                                    sale.addItem6Total(itemPrice);
+                                                    sale.addItem6Quantity(itemQuantity);
+                                                    break;
+                                                case "7":
+                                                    itemPrice = itemArray[6].getPrice() * itemQuantity;
+                                                    sale.addItem7Total(itemPrice);
+                                                    sale.addItem7Quantity(itemQuantity);
+                                                    break;
+                                                case "8":
+                                                    itemPrice = itemArray[7].getPrice() * itemQuantity;
+                                                    sale.addItem8Total(itemPrice);
+                                                    sale.addItem8Quantity(itemQuantity);
+                                                    break;
+                                                case "9":
+                                                    itemPrice = itemArray[8].getPrice() * itemQuantity;
+                                                    sale.addItem9Total(itemPrice);
+                                                    sale.addItem9Quantity(itemQuantity);
+                                                    break;
+                                                case "10":
+                                                    itemPrice = itemArray[9].getPrice() * itemQuantity;
+                                                    sale.addItem10Total(itemPrice);
+                                                    sale.addItem10Quantity(itemQuantity);
+                                                    break;
+                                            }
+
+                                            // Output item total
+                                            System.out.print(ITEM_TOTAL_MESSAGE +  String.format("%1$8s",currencyFormat.format(itemPrice) + "\n"));
+
+                                        }
+                                        else {
+                                            // Quantity Input Incorrect
+                                            // Print incorrect message
+                                            System.out.print(QUANTITY_INPUT_INCORRECT_MESSAGE);
                                         }
 
-                                        // Output item total
-                                        System.out.print(ITEM_TOTAL_MESSAGE + currencyFormat.format(itemPrice) + "\n");
-
+                                    } catch (Exception e) {
+                                            // Quantity input is incorrect
+                                            System.out.print(QUANTITY_INPUT_INCORRECT_MESSAGE);
                                     }
-                                    else {
-                                        // Quantity Input Incorrect
-                                        // Print incorrect message
-                                        System.out.print(QUANTITY_INPUT_INCORRECT_MESSAGE);
-                                    }
-
-                                } catch (Exception e) {
-                                        // Quantity input is incorrect
-                                        System.out.print(QUANTITY_INPUT_INCORRECT_MESSAGE);
-                                }
-
-                                    // SOMETHING HERE IS WRONG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                } while (!quantityInputFlag && codeInputFlag);
+                                } while (!quantityInputFlag);
 
                                 // Finish sale
                             } else if (Integer.parseInt(userInput) == -1) {
+                                codeInputFlag = true;
                                 quitSaleFlag = true;
 
-                                // Quit and Print receipt for sale
+                                // Quit and Print top of receipt for sale
                                 // add receipt top
                                 System.out.print(RECEIPT_LINE + RECEIPT_TOP + sale.createReceipt(currencyFormat));
 
                                 // Loop till tendered amount is larger than total with tax
                                 do {
                                     try {
+                                        // Reset tender flag
+                                        tenderCorrectFlag = false;
+
                                         // Prompt for tender amount
                                         System.out.print(TENDERED_AMOUNT_RECEIPT);
 
@@ -284,7 +306,7 @@ public class CashRegister {
 
                                             // Change
                                             // find change by subtracting tenderAmount by Total with tax
-                                            System.out.print(CHANGE_AMOUNT + currencyFormat.format(tenderAmount-sale.getTotalWithTax()) + RECEIPT_LINE);
+                                            System.out.print(CHANGE_AMOUNT + String.format("%1$7s",currencyFormat.format(tenderAmount-sale.getTotalWithTax())) + RECEIPT_LINE);
 
                                             // return value to 0, loop will re-prompt for sale
                                             returnInt = 0;
@@ -316,8 +338,6 @@ public class CashRegister {
                                 // Code input is incorrect
                                 System.out.print(CODE_INPUT_INCORRECT_MESSAGE);
                         }
-
-                        // ADD ADDITIONAL FLAG FOR REPEAT
                     } while (!codeInputFlag || !quitSaleFlag);
 
                 }
@@ -328,7 +348,7 @@ public class CashRegister {
                     returnInt = 1;
 
                     // EOD earnings
-                    System.out.print(EOD_MESSAGE + currencyFormat.format(sale.getEODtotal()) +
+                    System.out.print(EOD_MESSAGE +  String.format("%1$8s",currencyFormat.format(sale.getEODtotal())) +
                             "\n" + THANK_YOU);
                 }
                 else {
